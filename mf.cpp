@@ -12,7 +12,7 @@ void matfactor(
     float alpha,
     float lambda) {
     // TODO test with steps then move to eps for error
-    int steps = 10; // try with 100
+    int steps = 500;
     for (int step=0; step<steps; step++) {
 
         // TODO create P and Q here?
@@ -21,11 +21,11 @@ void matfactor(
             for (int col=0; col<R.cols(); col++) {
                 if (R(row,col) > 0) {
                     float eij = R(row,col)-P.row(row).dot(Q.col(col));
-                    std::cout << " eij is " << eij << std::endl;
                     for (int k=0; k<K; k++) {
-                        // get updated p and q values
-                        float p_=P(row,k)-2*alpha*(Q.row(k)*eij).sum()+(lambda*Q.row(k)).sum();
-                        float q_=Q(k,col)-2*alpha*(P.col(k)*eij).sum()+(lambda*P.col(k)).sum(); 
+                        float reg_p = (lambda*Q.row(k)).sum();
+                        float reg_q = (lambda*P.col(k)).sum();
+                        float p_=P(row,k)+2*alpha*((Q.row(k)*eij).sum()-reg_p);
+                        float q_=Q(k,col)+2*alpha*((P.col(k)*eij).sum()-reg_q);
                         P(row,k) = p_;
                         Q(k, col) = q_;
                     }
@@ -45,7 +45,10 @@ void matfactor(
                 }
             }
         }
-        // TODO why is going to inf
         std::cout << "Iteration : " << step << " ~ error : " << e << std::endl;
     }
+
+    std::cout << "P :" << P << std::endl;
+    std::cout << "Q :" << Q << std::endl;
+    std::cout << "P*Q :" << P*Q << std::endl;
 }
