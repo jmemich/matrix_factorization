@@ -1,0 +1,112 @@
+\documentclass[12pt,reqno]{article}
+
+\usepackage{amsmath, amsthm}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+\urlstyle{same}
+
+\title{Matrix Factorization with Stochastic Gradient Descent}
+\date{July 3, 2017}
+\author{James Michelson}
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Solving matrix factorization with stochastic gradient descent.
+\end{abstract}
+
+\section{Basic Matrix Factorization}
+
+Within the context of a recommendation problem, let use denote the set of users
+$U$ and the set of items $D$. Let \textbf{R} be the size of
+$|\textit{U}|\times|\textit{D}|$ and assume we wish to discover $K$ latent
+features. Thus, we want to discover two matrices $\mathbf{P}$ (a $|\textit{U}|\times K$ matrix)
+and $\mathbf{Q}$ (a $|\textit{D}|\times K$ matrix) such that their
+product approximates $\textbf{R}$:
+
+\begin{equation}
+\textbf{R} \approx \textbf{P}\times\textbf{Q}^T = \hat{\textbf{R}}
+\end{equation}
+
+We can consider each row of $\textbf{P}$ to represent the strength of the
+association between a user and the latent features. Likewise, each row of
+$\textbf{Q}$ can be considered the strength between an item and the latent
+features.
+
+To get the prediction of an item $q_j$ by $u_i$, we can take the dot product of
+the two vectors coresponding to $p_i$ and $q_j$:
+
+\begin{equation}
+\hat{r}_{ij} = p_i^Tq_j = \sum_{k=1}^{K}p_{ik} q_{jk}
+\end{equation}
+
+With stochastic gradient descent we can initialize $\textbf{P}$ and $\textbf{Q}$
+with arbitrarily values and iteratively calculate the predicted difference
+between $\hat{r}_{ij}$ and $r$, aiming to find a (local) minimum of the
+difference.
+
+We can estimate the error as follows:
+\begin{align}
+e_{ij}^2 = (r_{ij} - \hat{r}_{ij})^2 \\
+\hat{r}_{ij} = \sum_{k=1}^{K}p_{ik} q_{kj} \\
+e_{ij}^2 = (r_{ij} - \sum_{k=1}^{K}p_{ik} q_{kj})^2 \\
+e_{total} = \sum_{i=1}^{P} \sum_{j=1}^{Q} (r_{ij} - \sum_{k=1}^{K}p_{ik} q_{kj})^2
+\end{align}
+
+To minimize this error, we need to know the gradient at the current values and
+therefore we differentiate the above equation with respect to these two
+variables separately. As per (4) above, we can derive the gradient with respect
+to the error for $p_{ik}$ and $q_{kj}$:
+% TODO: how to dynamically reference equations?
+\begin{align}
+  \frac{\partial e_{total}}{\partial p_{ik}} = -2\sum_{j=1}^{Q}(r_{ij} -
+\hat{r}_{ij})q_{kj} = -2\sum_{j=1}^{Q}e_{ij}q_{kj} \\
+  \frac{\partial e_{total}}{\partial q_{kj}} = -2\sum_{i=1}^{P}(r_{ij} -
+\hat{r}_{ij})p_{ik} = -2\sum_{i=1}^{P}e_{ij}p_{ik}
+\end{align}
+
+Thus we have the update rules for both $p_{ik}$ and $q_{kj}$:
+
+\begin{align}
+  p'_{ik} = p_{ik} - \alpha\frac{\partial e_{total}}{\partial p_{ik}}
+= p_{ik} - 2\alpha\sum_{j=1}^{Q}e_{ij}q_{kj} \\
+  q'_{kj} = q_{kj} - \alpha\frac{\partial e_{total}}{\partial q_{kj}}
+= q_{kj} - 2\alpha\sum_{i=1}^{P}e_{ij}p_{ik}
+\end{align}
+
+Where $\alpha$ is constant (termed step-size) which determines the rate at which
+we approach the local minimum.
+
+\section{Regularization}
+%TODO
+Additionally, we can add a regularization parameter to reduce overfitting. The
+can be acheived by adding a parameter $\lambda$ and modifying the squared error
+as follows:
+
+\begin{equation}
+  e_{ij}^2 = (r_{ij} - \sum_{k=1}^{K}p_{ik} q_{kj})^2 + 
+\lambda\sum_{k=1}^{K}(||P||^2 + ||Q||^2)
+\end{equation}
+
+This parameter $\lambda$ is used to ensure that our latent feature vectors for
+users and items (i.e., $P$ and $Q$) give approximations of $R$ without
+containing large numbers. Thus, our new update rules are:
+
+\begin{align}
+  p'_{ik} = p_{ik} - 2\alpha(\sum_{j=1}^{Q}e_{ij}q_{kj} + \lambda q_{kj}) \\
+  q'_{kj} = q_{kj} - 2\alpha(\sum_{i=1}^{P}e_{ij}p_{ik} + \lambda p_{ik})
+\end{align}
+
+\section{Acknowledgements}
+\begin{itemize}
+\item QuuxLabs \href{http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/}{writeup}
+\item John Davis
+\end{itemize}
+
+\end{document}
