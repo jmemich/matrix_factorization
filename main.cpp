@@ -21,19 +21,10 @@ int main() {
          1,0,0,4,
          0,1,5,4;
 
-    // ~randomly initialized factorization matrixes with K latent features
-    // TODO make these all zeros?
-    Eigen::MatrixXf P(5,K);
-    Eigen::MatrixXf Q(K,4);
-    P << 1,1,
-         1,1,
-         1,1,
-         1,1,
-         1,1;
-    Q << 1,1,1,1,
-         1,1,1,1;
-
-    matfactor(R,P,Q,K,alpha,lambda);
+    std::tuple<Eigen::MatrixXf,Eigen::MatrixXf> t = matfactor(R,K,alpha,lambda);
+    Eigen::MatrixXf P = std::get<0>(t);
+    Eigen::MatrixXf Q = std::get<1>(t);
+    std::cout << "R^ :" << P*Q << std::endl;
 
     return 0;
 }

@@ -1,10 +1,9 @@
+#include<tuple>
 #include<iostream>
 #include<Eigen/dense>
 
-void matfactor(
+std::tuple<Eigen::MatrixXf,Eigen::MatrixXf> matfactor(
     Eigen::MatrixXi & R,
-    Eigen::MatrixXf & P,
-    Eigen::MatrixXf & Q,
     int K,
     float alpha,
     float lambda);
