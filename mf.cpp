@@ -4,13 +4,15 @@
 
 #include "mf.h"
 
-void matfactor(
+std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> matfactor(
     Eigen::MatrixXi & R,
-    Eigen::MatrixXf & P,
-    Eigen::MatrixXf & Q,
     int K,
     float alpha,
     float lambda) {
+
+    Eigen::MatrixXf P = Eigen::MatrixXf::Random(R.rows(), K);
+    Eigen::MatrixXf Q = Eigen::MatrixXf::Random(K, R.cols());
+
     // TODO test with steps then move to eps for error
     int steps = 500;
     for (int step=0; step<steps; step++) {
@@ -27,7 +29,7 @@ void matfactor(
                         float p_=P(row,k)+2*alpha*((Q.row(k)*eij).sum()-reg_p);
                         float q_=Q(k,col)+2*alpha*((P.col(k)*eij).sum()-reg_q);
                         P(row,k) = p_;
-                        Q(k, col) = q_;
+                        Q(k,col) = q_;
                     }
                 }
             }
@@ -45,10 +47,9 @@ void matfactor(
                 }
             }
         }
-        std::cout << "Iteration : " << step << " ~ error : " << e << std::endl;
+        // std::cout << "Iteration : " << step << " ~ error : " << e << std::endl;
     }
 
-    std::cout << "P :" << P << std::endl;
-    std::cout << "Q :" << Q << std::endl;
-    std::cout << "P*Q :" << P*Q << std::endl;
+    std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> t = std::make_tuple(P,Q);
+    return t;
 }
