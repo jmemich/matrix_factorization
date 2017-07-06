@@ -17,7 +17,6 @@ std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> matfactor(
     int steps = 500;
     for (int step=0; step<steps; step++) {
 
-        // TODO create P and Q here?
         // TODO cols first? arrays stored in Fortran order (i.e., cols)
         for (int row=0; row<R.rows(); row++) {
             for (int col=0; col<R.cols(); col++) {
@@ -35,7 +34,6 @@ std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> matfactor(
             }
         }
 
-        Eigen::MatrixXf R_ = P*Q;
         float e = 0;
         for (int row=0; row<R.rows(); row++) {
             for (int col=0; col<R.cols(); col++) {
@@ -47,7 +45,7 @@ std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> matfactor(
                 }
             }
         }
-        // std::cout << "Iteration : " << step << " ~ error : " << e << std::endl;
+        std::cout << "Iteration : " << step << " ~ error : " << e << std::endl;
     }
 
     std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> t = std::make_tuple(P,Q);
