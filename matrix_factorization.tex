@@ -99,8 +99,10 @@ users and items (i.e., $P$ and $Q$) give approximations of $R$ without
 containing large numbers. Thus, our new update rules are:
 
 \begin{align}
-  p'_{ik} = p_{ik} + 2\alpha(\sum_{j=1}^{Q}e_{ij}q_{kj} - \lambda q_{kj}) \\
-  q'_{kj} = q_{kj} + 2\alpha(\sum_{i=1}^{P}e_{ij}p_{ik} - \lambda p_{ik})
+  p'_{ik} = p_{ik} + 2\alpha(\sum_{j=1}^{Q}e_{ij}q_{kj} -
+\lambda\sum_{j=1}^{Q}q_{kj}) \\
+  q'_{kj} = q_{kj} + 2\alpha(\sum_{i=1}^{P}e_{ij}p_{ik} -
+\lambda\sum_{i=1}^{P}p_{ik})
 \end{align}
 
 \section{Acknowledgements}
