@@ -75,9 +75,9 @@ Thus we have the update rules for both $p_{ik}$ and $q_{kj}$:
 
 \begin{align}
   p'_{ik} = p_{ik} - \alpha\frac{\partial e_{total}}{\partial p_{ik}}
-= p_{ik} - 2\alpha\sum_{j=1}^{Q}e_{ij}q_{kj} \\
+= p_{ik} + 2\alpha\sum_{j=1}^{Q}e_{ij}q_{kj} \\
   q'_{kj} = q_{kj} - \alpha\frac{\partial e_{total}}{\partial q_{kj}}
-= q_{kj} - 2\alpha\sum_{i=1}^{P}e_{ij}p_{ik}
+= q_{kj} + 2\alpha\sum_{i=1}^{P}e_{ij}p_{ik}
 \end{align}
 
 Where $\alpha$ is constant (termed step-size) which determines the rate at which
@@ -99,8 +99,8 @@ users and items (i.e., $P$ and $Q$) give approximations of $R$ without
 containing large numbers. Thus, our new update rules are:
 
 \begin{align}
-  p'_{ik} = p_{ik} - 2\alpha(\sum_{j=1}^{Q}e_{ij}q_{kj} + \lambda q_{kj}) \\
-  q'_{kj} = q_{kj} - 2\alpha(\sum_{i=1}^{P}e_{ij}p_{ik} + \lambda p_{ik})
+  p'_{ik} = p_{ik} + 2\alpha(\sum_{j=1}^{Q}e_{ij}q_{kj} - \lambda q_{kj}) \\
+  q'_{kj} = q_{kj} + 2\alpha(\sum_{i=1}^{P}e_{ij}p_{ik} - \lambda p_{ik})
 \end{align}
 
 \section{Acknowledgements}
